@@ -188,16 +188,10 @@ public class RNPushNotificationHelper {
             }
         }
 
-        int notificationID;
-        String notificationIDString = bundle.getString("id");
+        String notificationID = bundle.getString("id");
 
-        if ( notificationIDString != null ) {
-            notificationID = Integer.parseInt(notificationIDString);
-        } else {
-            notificationID = (int) System.currentTimeMillis();
-        }
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationManager notificationManager =
@@ -210,7 +204,7 @@ public class RNPushNotificationHelper {
         info.defaults |= Notification.DEFAULT_SOUND;
         info.defaults |= Notification.DEFAULT_LIGHTS;
 
-        notificationManager.notify(notificationID, info);
+        notificationManager.notify(notificationID, 0, info);
     }
 
     public void cancelAll() {
