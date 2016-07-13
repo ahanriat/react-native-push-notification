@@ -169,16 +169,9 @@ Notifications._onNotification = function(data, isFromBackground = null) {
 		} else {
 			var notificationData = {
 				foreground: ! isFromBackground,
-				...data
+				message: {},
+				data,
 			};
-
-			if ( typeof notificationData.data === 'string' ) {
-				try {
-					notificationData.data = JSON.parse(notificationData.data);
-				} catch(e) {
-					/* void */
-				}
-			}
 
 			this.onNotification(notificationData);
 		}

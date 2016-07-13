@@ -28,15 +28,15 @@ public class RNPushNotificationHelper {
     }
 
     public Class getMainActivityClass() {
-      String packageName = mContext.getPackageName();
-      Intent launchIntent = mContext.getPackageManager().getLaunchIntentForPackage(packageName);
-      String className = launchIntent.getComponent().getClassName();
-      try {
-          return Class.forName(className);
-      } catch (ClassNotFoundException e) {
-          e.printStackTrace();
-          return null;
-      }
+        String packageName = mContext.getPackageName();
+        Intent launchIntent = mContext.getPackageManager().getLaunchIntentForPackage(packageName);
+        String className = launchIntent.getComponent().getClassName();
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private AlarmManager getAlarmManager() {
@@ -89,7 +89,12 @@ public class RNPushNotificationHelper {
             return;
         }
 
-        if (bundle.getString("message") == null) {
+        int msgcnt = Integer.parseInt(bundle.getString("msgcnt", "0"));
+        String message = bundle.getString("message");
+
+
+        if (message== null || msgcnt == 0) {
+            this.cancelAll();
             return;
         }
 
@@ -107,9 +112,11 @@ public class RNPushNotificationHelper {
                 .setTicker(bundle.getString("ticker"))
                 .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(bundle.getBoolean("autoCancel", true));
+                .setAutoCancel(bundle.getBoolean("autoCancel", true))
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setColor(Color.parseColor("#009DDC"));;
 
-        notification.setContentText(bundle.getString("message"));
+        notification.setContentText(message);
 
         String largeIcon = bundle.getString("largeIcon");
 
@@ -160,7 +167,7 @@ public class RNPushNotificationHelper {
         String bigText = bundle.getString("bigText");
 
         if (bigText == null ) {
-            bigText = bundle.getString("message");
+            bigText = message;
         }
 
         notification.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
